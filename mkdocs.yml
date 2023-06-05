@@ -1,0 +1,56 @@
+site_name: commander
+repo_url: https://github.com/raman4793/commander
+site_url: https://raman4793.github.io/commander
+site_description: A tool to convert a function or class to work as a CLI.
+site_author: Ram
+edit_uri: edit/main/docs/
+repo_name: raman4793/commander
+copyright: Maintained by <a href="https://raman4793.com">Florian</a>.
+
+nav:
+  - Home: index.md
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+            options:
+              show_root_heading: true
+              show_sources: true
+            setup_commands:
+                - import sys
+                - sys.path.append('../')
+theme:
+  name: material
+  feature:
+    tabs: true
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/raman4793/commander
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/commander
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
