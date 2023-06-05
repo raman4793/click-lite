@@ -9,6 +9,9 @@ copyright: Maintained by <a href="https://raman4793.com">Florian</a>.
 
 nav:
   - Home: index.md
+  - Modules:
+      - index: modules/index.md
+      - Signature Reader: modules/signature_reader.md
 plugins:
   - search
   - mkdocstrings:

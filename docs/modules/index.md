@@ -1,1 +1,1 @@
-::: commander
+::: click_lite
