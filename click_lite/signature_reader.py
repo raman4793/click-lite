@@ -133,7 +133,7 @@ class Parameter:
     @classmethod
     def from_inspect_parameter(cls, parameter: inspect.Parameter) -> "Parameter":
         """
-        An interface to creating a commander.Parameter object from an inspect.Parameter object.
+        An interface to creating a click_lite.Parameter object from an inspect.Parameter object.
 
         Args:
             parameter: The inspect.Parameter object.
@@ -142,7 +142,7 @@ class Parameter:
             InvalidParameterException: If the input parameter to the function is not of type inspect.Parameter
 
         Returns:
-            parameter: The commander.Parameter object.
+            parameter: The click_lite.Parameter object.
         """
         if type(parameter) is not inspect.Parameter:
             raise InvalidParameterException(
@@ -217,7 +217,7 @@ class Signature:
     @classmethod
     def from_inspect_signature(cls, signature: inspect.Signature) -> "Signature":
         """
-        An interface to creating a commander.Signature object from an inspect.Signature object.
+        An interface to creating a click_lite.Signature object from an inspect.Signature object.
 
         Args:
             signature: The inspect.Signature object.
@@ -226,7 +226,7 @@ class Signature:
             InvalidSignatureException: If the input signature to the function is not of type inspect.Signature
 
         Returns:
-            signature: The commander.Signature object.
+            signature: The click_lite.Signature object.
         """
         if type(signature) is not inspect.Signature:
             raise InvalidSignatureException(
@@ -254,13 +254,13 @@ class SignatureReader:
 
     def read(self, method: Callable) -> Signature:
         """
-        Returns a reference of `commander.Signature` object for the signature of the method.
+        Returns a reference of `click_lite.Signature` object for the signature of the method.
 
         Args:
             method: A reference to the callable to which you need the signature to
 
         Returns:
-            signature: The commander.Signature  reference
+            signature: The click_lite.Signature  reference
         """
         if not callable(method):
             raise TypeError(

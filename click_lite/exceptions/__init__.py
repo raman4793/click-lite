@@ -1,10 +1,10 @@
-class CommanderException(Exception):
+class ClickLiteException(Exception):
     ...
 
 
-class InvalidParameterException(CommanderException):
+class InvalidParameterException(ClickLiteException):
     ...
 
 
-class InvalidSignatureException(CommanderException):
+class InvalidSignatureException(ClickLiteException):
     ...
