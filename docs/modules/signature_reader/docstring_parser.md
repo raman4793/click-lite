@@ -1,1 +1,1 @@
-::: click_lite.signature_reader.DocStringParser
+::: click_lite.signature_reader.signature.DocStringParser

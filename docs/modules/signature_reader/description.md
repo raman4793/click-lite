@@ -1,1 +1,1 @@
-::: click_lite.signature_reader.Description
+::: click_lite.signature_reader.signature.Description
