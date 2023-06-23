@@ -3,7 +3,7 @@ import inspect
 import pytest
 
 from click_lite.exceptions import InvalidParameterException, InvalidSignatureException
-from click_lite.signature_reader import Description, DocStringParser, Parameter, Signature, SignatureReader
+from click_lite.signature_reader.signature import Description, DocStringParser, Parameter, Signature, SignatureReader
 
 
 @pytest.fixture
