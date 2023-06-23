@@ -115,7 +115,7 @@ class Parameter:
     name: str
     data_type: Any
     is_required: bool = False
-    default: Any | None = None
+    default: Optional[Any] = None
     description: str = ""
 
     @classmethod
@@ -153,7 +153,7 @@ class Signature:
 
     def __init__(self) -> None:
         self._parameters: dict = {}
-        self._description: Description | None = None
+        self._description: Optional[Description] = None
 
     def add_parameter(self, parameter: Parameter) -> "Signature":
         """
@@ -183,7 +183,7 @@ class Signature:
         return list(self._parameters.values())
 
     @property
-    def description(self) -> Description | None:
+    def description(self) -> Optional[Description]:
         return self._description
 
     def has_parameter(self, parameter_name: str) -> bool:
@@ -198,7 +198,7 @@ class Signature:
         """
         return self.get_parameter(parameter_name=parameter_name) is not None
 
-    def get_parameter(self, parameter_name: str) -> Parameter | None:
+    def get_parameter(self, parameter_name: str) -> Optional[Parameter]:
         """
         Returns the reference to the parameter with the name provided.
 
@@ -245,7 +245,7 @@ class SignatureReader:
     The `SignatureReader` class provides an easy interface to read the signature of a `callable` object.
     """
 
-    def __init__(self, custom_docstring_parser: DocStringParser | None = None):
+    def __init__(self, custom_docstring_parser: Optional[DocStringParser] = None):
         self.custom_docstring_parser = custom_docstring_parser if custom_docstring_parser else DocStringParser()
 
     def read(self, method: Callable) -> Signature:
