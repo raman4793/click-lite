@@ -1,5 +1,7 @@
 import inspect
-from typing import Any, Callable, Optional, Sequence
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass, field
+from typing import Any, Optional
 
 import docstring_parser
 from docstring_parser import parse
@@ -7,20 +9,17 @@ from docstring_parser import parse
 from click_lite.exceptions import InvalidParameterException, InvalidSignatureException
 
 
+@dataclass(slots=True)
 class ParameterDescription:
     """
     A class representation of a parameter description in the docstring of a callable.
-    """
-
-    def __init__(self, name: str, description: Optional[str]) -> None:
-        """
-        The initialisation of `ParameterDescription`.
         Args:
             name: The name of the parameter
             description: The description of the parameter.
-        """
-        self.name = name
-        self.description = description
+    """
+
+    name: str = ""
+    description: Optional[str] = None
 
     @classmethod
     def from_docstring_parsed_parameter(cls, parameter: docstring_parser.DocstringParam) -> "ParameterDescription":
@@ -35,33 +34,23 @@ class ParameterDescription:
         return cls(name=parameter.arg_name, description=parameter.description)
 
 
+@dataclass(slots=True)
 class Description:
     """
     A class representation of a docstring of a callable.
-    """
-
-    def __init__(
-        self,
-        short_description: Optional[str],
-        long_description: Optional[str],
-        parameter_descriptions: Sequence[ParameterDescription],
-        raises_description: Optional[str],
-        result_description: Optional[str],
-    ) -> None:
-        """
-        The initialisation of `Description`.
         Args:
             short_description: The first line of a docstring
             long_description: The second to n number of lines in a docstring
             parameter_descriptions: A sequence of `ParameterDescription` objects for each parameter mentioned in a docstring.
             raises_description: TBD
             result_description: TBD
-        """
-        self.short_description = short_description
-        self.long_description = long_description
-        self.parameter_descriptions = parameter_descriptions
-        self.raises_description = raises_description
-        self.result_description = result_description
+    """
+
+    short_description: Optional[str] = None
+    long_description: Optional[str] = None
+    parameter_descriptions: Sequence[ParameterDescription] = field(default_factory=list)
+    raises_description: Optional[str] = None
+    result_description: Optional[str] = None
 
     @classmethod
     def from_docstring_parsed(cls, parsed: docstring_parser.Docstring) -> "Description":
@@ -76,12 +65,18 @@ class Description:
             ParameterDescription.from_docstring_parsed_parameter(parameter=parameter) for parameter in parsed.params
         ]
         return cls(
-            short_description=parsed.short_description,
+            short_description=cls._convert_literal_none_to_none(parsed.short_description),
             long_description=parsed.long_description,
             parameter_descriptions=parameter_descriptions,
             raises_description=None,
             result_description=None,
         )
+
+    @staticmethod
+    def _convert_literal_none_to_none(value: Optional[str]) -> Optional[str]:
+        if type(value) is str:
+            return None if value.lower() == "none" else value
+        return value
 
 
 class DocStringParser:
@@ -104,31 +99,24 @@ class DocStringParser:
         return description
 
 
+@dataclass(slots=True)
 class Parameter:
     """
     An abstraction over the inspect.Parameter class. This class also meant to store a description parsed from the
     docstring along with the usual name, data type etc.
+        Args:
+        name: The name of the argument
+        data_type: The data type of the argument. This is retrieved from the type hint used in the function definition.
+        is_required: Weather the parameter is required or optional. If a default value is provided, its considered optional.
+        default: The default value for this
+        description: The description for the parameter, retrieved from the docstring.
     """
 
-    def __init__(
-        self, name: str, data_type: type, is_required: bool, default: Any = None, description: str = ""
-    ) -> None:
-        """
-        The initialisation logic for the Parameter, but you might usually use the Parameter.from_inspect_parameter
-        method instead to create a Parameter object.
-
-        Args:
-            name: The name of the argument
-            data_type: The data type of the argument. This is retrieved from the type hint used in the function definition.
-            is_required: Weather the parameter is required or optional. If a default value is provided, its considered optional.
-            default: The default value for this
-            description: The description for the parameter, retrieved from the docstring.
-        """
-        self.name = name
-        self.data_type = data_type
-        self.default = default
-        self.description = description
-        self.is_required = is_required
+    name: str
+    data_type: Any
+    is_required: bool = False
+    default: Any | None = None
+    description: str = ""
 
     @classmethod
     def from_inspect_parameter(cls, parameter: inspect.Parameter) -> "Parameter":
@@ -151,7 +139,7 @@ class Parameter:
         click_lite_parameter = cls(
             name=parameter.name,
             data_type=parameter.annotation,
-            default=parameter.default,
+            default=parameter.default if parameter.default is not inspect._empty else None,
             is_required=parameter.default is inspect._empty,
         )
         return click_lite_parameter
@@ -165,7 +153,7 @@ class Signature:
 
     def __init__(self) -> None:
         self._parameters: dict = {}
-        self._description: Optional[Description] = None
+        self._description: Description | None = None
 
     def add_parameter(self, parameter: Parameter) -> "Signature":
         """
@@ -189,6 +177,14 @@ class Signature:
         if type(value) is not Parameter:
             raise TypeError("Only accept values of type `Parameter`")
         self._parameters[key] = value
+
+    @property
+    def parameters(self) -> Sequence[Parameter]:
+        return list(self._parameters.values())
+
+    @property
+    def description(self) -> Description | None:
+        return self._description
 
     def has_parameter(self, parameter_name: str) -> bool:
         """
@@ -249,7 +245,7 @@ class SignatureReader:
     The `SignatureReader` class provides an easy interface to read the signature of a `callable` object.
     """
 
-    def __init__(self, custom_docstring_parser: Optional[DocStringParser] = None):
+    def __init__(self, custom_docstring_parser: DocStringParser | None = None):
         self.custom_docstring_parser = custom_docstring_parser if custom_docstring_parser else DocStringParser()
 
     def read(self, method: Callable) -> Signature:
