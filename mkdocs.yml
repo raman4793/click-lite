@@ -21,7 +21,6 @@ nav:
           - Description: modules/signature_reader/description.md
           - Parameter Description: modules/signature_reader/parameter_description.md
           - DocString Parser: modules/signature_reader/docstring_parser.md
-      - Command: modules/command.md
 plugins:
   - search
   - mkdocstrings:
