@@ -73,9 +73,9 @@ class Description:
         )
 
     @staticmethod
-    def _convert_literal_none_to_none(value: Optional[str]) -> Optional[str]:
+    def _convert_literal_none_to_none(value: Optional[Any]) -> Optional[Any]:
         if type(value) is str:
-            return None if value.lower() == "none" else value
+            return None if value.lower() in ["none", "null"] else value
         return value
 
 
@@ -260,8 +260,8 @@ class SignatureReader:
         """
         if not callable(method):
             raise TypeError(
-                f"The object {method.__name__} is not callable, the SignatureReader only supports reading signature of"
-                " callables."
+                f"The object {type(method).__name__} is not callable, "
+                "the SignatureReader only supports reading signature of callables."
             )
         inspect_signature = inspect.signature(method)
         signature = Signature.from_inspect_signature(signature=inspect_signature)
