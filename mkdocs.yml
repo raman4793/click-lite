@@ -1,17 +1,30 @@
-site_name: commander
-repo_url: https://github.com/raman4793/commander
-site_url: https://raman4793.github.io/commander
+site_name: click-lite
+repo_url: https://github.com/raman4793/click-lite
+site_url: https://raman4793.github.io/click-lite
 site_description: A tool to convert a function or class to work as a CLI.
 site_author: Ram
 edit_uri: edit/main/docs/
-repo_name: raman4793/commander
-copyright: Maintained by <a href="https://raman4793.com">Florian</a>.
+repo_name: raman4793/click-lite
+watch:
+  - docs
+  - click_lite
+copyright: Maintained by <a href="https://raman4793.github.io">Ram</a>.
 
 nav:
   - Home: index.md
+  - Modules:
+      - Signature Reader:
+          - Home: modules/signature_reader/index.md
+          - Signature Reader: modules/signature_reader/signature_reader.md
+          - Signature: modules/signature_reader/signature.md
+          - Parameter: modules/signature_reader/parameter.md
+          - Description: modules/signature_reader/description.md
+          - Parameter Description: modules/signature_reader/parameter_description.md
+          - DocString Parser: modules/signature_reader/docstring_parser.md
 plugins:
   - search
   - mkdocstrings:
+      enable_inventory: false
       handlers:
         python:
             options:
@@ -45,9 +58,9 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/raman4793/commander
+      link: https://github.com/raman4793/click-lite
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/commander
+      link: https://pypi.org/project/click-lite
 
 markdown_extensions:
   - toc:
